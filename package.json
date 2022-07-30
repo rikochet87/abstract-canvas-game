@@ -1,10 +1,12 @@
 {
   "name": "abstract-game",
   "version": "1.0.0",
-  "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "parcel serve src/index.html"
+    "dev": "parcel serve ./src/index.html",
+    "build": "parcel build ./src/index.html --dist-dir build --public-url /abstract-game",
+    "deploy": "gh-pages -d build",
+    "build-and-deploy": "npm run build && npm run deploy"
   },
   "dependencies": {
     "gh-pages": "^4.0.0",
