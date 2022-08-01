@@ -1,6 +1,7 @@
 import { Player } from "./player";
 import { Projectile } from "./projectiles";
-import { Enemy } from "./enemy";
+import { Particle } from "./particle";
+import { spawnEnemies } from "./spawn-enemies";
 
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
@@ -12,41 +13,24 @@ const x = canvas.width / 2;
 const y = canvas.height / 2;
 
 const player = new Player(x, y, 10, "white");
-
 const projectiles = [];
 const enemies = [];
-
-function spawnEnemies() {
-  setInterval(() => {
-    const radius = Math.random() * (30 - 4) + 4;
-    let x;
-    let y;
-
-    if (Math.random() < 0.5) {
-      x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius;
-      y = Math.random() * canvas.height;
-    } else {
-      x = Math.random() * canvas.width;
-      y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius;
-    }
-
-    const color = `hsl(${Math.random() * 360}, 50%, 50%)`;
-    const angle = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x);
-    const velocity = {
-      x: Math.cos(angle),
-      y: Math.sin(angle),
-    };
-    enemies.push(new Enemy(x, y, radius, color, velocity));
-  }, 1000);
-}
+const particles = [];
 
 let animationId;
-
 function animate() {
   animationId = requestAnimationFrame(animate);
   c.fillStyle = "rgba(0, 0, 0, 0.1";
   c.fillRect(0, 0, canvas.width, canvas.height);
   player.draw();
+
+  particles.forEach((particle, index) =>{
+    if(particle.alpha <= 0){
+      particles.splice(index, 1)
+    }else{
+      particle.update()
+    }
+  })
 
   projectiles.forEach((projectile, index) => {
     projectile.update();
@@ -79,10 +63,21 @@ function animate() {
 
       // when projectiles touch enemy
       if (dist - enemy.radius - projectile.radius < 1) {
-        if (enemy.radius -10 > 5) {
+
+        //create explosions
+        for (let i = 0; i < enemy.radius * 2; i++) {
+          particles.push(
+            new Particle(projectile.x, projectile.y, Math.random() * 2, enemy.color, {
+              x: (Math.random() - 0.5)*(Math.random()*6),
+              y: (Math.random() - 0.5)*(Math.random()*6)
+            })
+          );
+        }
+
+        if (enemy.radius - 10 > 5) {
           gsap.to(enemy, {
-            radius: enemy.radius - 10
-          })
+            radius: enemy.radius - 10,
+          });
           setTimeout(() => {
             projectiles.splice(projectileIndex, 1);
           }, 0);
@@ -114,4 +109,4 @@ addEventListener("click", (event) => {
 animate();
 spawnEnemies();
 
-export { canvas, c };
+export { canvas, c, enemies };
