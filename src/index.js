@@ -10,6 +10,8 @@ canvas.width = innerWidth;
 canvas.height = innerHeight;
 
 const scoreEl = document.querySelector("#scoreEl");
+const startGameBtn = document.querySelector("#startGameBtn")
+const modalEl = document.querySelector("#modalEl")
 
 const x = canvas.width / 2;
 const y = canvas.height / 2;
@@ -118,7 +120,10 @@ addEventListener("click", (event) => {
   );
 });
 
-animate();
-spawnEnemies();
+startGameBtn.addEventListener("click", () =>{
+  animate();
+  spawnEnemies();
+  modalEl.style.display = "none"
+})
 
 export { canvas, c, enemies };
