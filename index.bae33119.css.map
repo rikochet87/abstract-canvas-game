@@ -1,0 +1,1 @@
+{"mappings":"ACAA","sources":["index.bae33119.css","src/style.css"],"sourcesContent":["body {\n  background: #000;\n  margin: 0;\n}\n\n/*# sourceMappingURL=index.bae33119.css.map */\n","body{\r\n    margin: 0;\r\n    background: black;\r\n}"],"names":[],"version":3,"file":"index.bae33119.css.map"}
